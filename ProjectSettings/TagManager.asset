@@ -6,7 +6,6 @@ TagManager:
   tags:
   - ground
   - collectible
-  - player
   layers:
   - Default
   - TransparentFX
