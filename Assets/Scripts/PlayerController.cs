@@ -9,19 +9,25 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float speed = 5;
     [SerializeField] Rigidbody2D rb;
     [SerializeField] Animator animator;
+    private SpriteRenderer spriteRenderer;
     [SerializeField] float jumpPower = 2f;
     bool jumping = false;
-    public GameObject coin;
+    bool facingRight = true;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     // Update is called once per frame
     void Update()
     {
-
+        if (rb.linearVelocityX != 0)
+        {
+            spriteRenderer.flipX = rb.linearVelocityX < 0;
+        }
     }
 
     void OnMove(InputValue value)
@@ -32,10 +38,18 @@ public class PlayerController : MonoBehaviour
         movementY = v.y;
 
         animator.SetBool("walking", !Mathf.Approximately(v.x, 0));
+
         // if (movementX < 0 && facingRight)
         // {
         //     transform.localScale.x *= -1;
         // }
+
+        // facingRight = v.x >= 0f;
+        // if (spriteRenderer.flipX == facingRight)
+        // {
+        //     spriteRenderer.flipX = !facingRight;
+        // }
+
     }
 
     void OnJump()
@@ -82,15 +96,6 @@ public class PlayerController : MonoBehaviour
     private void OnCollisionExit2D(Collision2D collision)
     {
         touchingGround = false;
-    }
-
-    private void OnTriggerEnter2D(Collider2D trigger)
-    {
-        if (trigger.gameObject.CompareTag("collectible"))
-        {
-            Debug.Log("touching coin");
-            Destroy(coin);
-        }
     }
 
 }
